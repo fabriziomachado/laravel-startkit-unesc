@@ -7,6 +7,6 @@
             "favicon",
             "js"
         ],
-        "paths": []
+        "paths": ["./coverage"]
     }
 }

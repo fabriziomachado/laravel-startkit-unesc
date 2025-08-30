@@ -1,4 +1,106 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+echo "🔍 Executando TODAS as verificações de qualidade antes do commit..."
+echo "================================================"
 
-composer run test
+# Função para tentar corrigir automaticamente
+try_auto_fix() {
+    local error_type="$1"
+    local fix_command="$2"
+    local description="$3"
+
+    echo ""
+    echo "❌ Erro encontrado: $error_type"
+    echo "💡 $description"
+    echo ""
+    echo "🔄 Tentando correção automática..."
+
+    if eval "$fix_command"; then
+        echo "✅ Correção aplicada com sucesso!"
+        return 0
+    else
+        echo "❌ Falha na correção automática"
+        echo "💡 Execute manualmente: $fix_command"
+        return 1
+    fi
+}
+
+# 1. Verificação de ortografia
+echo "📝 1/6 Verificando ortografia (Peck)..."
+if ! composer run test:typos; then
+    if try_auto_fix "Ortografia" "composer run test:typos" "Verificação de ortografia falhou"; then
+        echo "✅ Ortografia corrigida automaticamente"
+    else
+        echo "❌ Erro na verificação de ortografia!"
+        echo "💡 Execute: composer run test:typos"
+        exit 1
+    fi
+fi
+echo "✅ Ortografia OK"
+
+# 2. Verificação de tipos
+echo "🔍 2/6 Verificando tipos (Larastan)..."
+if ! composer run test:types; then
+    if try_auto_fix "Tipos" "composer run test:types" "Verificação de tipos falhou"; then
+        echo "✅ Tipos corrigidos automaticamente"
+    else
+        echo "❌ Erro na verificação de tipos!"
+        echo "💡 Execute: composer run test:types"
+        exit 1
+    fi
+fi
+echo "✅ Tipos OK"
+
+# 3. Verificação de formatação
+echo "🎨 3/6 Verificando formatação (Pint + Prettier)..."
+if ! composer run test:lint; then
+    if try_auto_fix "Formatação" "composer run lint" "Verificação de formatação falhou"; then
+        echo "✅ Formatação corrigida automaticamente"
+    else
+        echo "❌ Erro na verificação de formatação!"
+        echo "💡 Execute: composer run lint"
+        exit 1
+    fi
+fi
+echo "✅ Formatação OK"
+
+# 4. Verificação de cobertura de tipos
+echo "📊 4/6 Verificando cobertura de tipos..."
+if ! composer run test:type-coverage; then
+    if try_auto_fix "Cobertura de tipos" "composer run test:type-coverage" "Verificação de cobertura de tipos falhou"; then
+        echo "✅ Cobertura de tipos corrigida automaticamente"
+    else
+        echo "❌ Erro na verificação de cobertura de tipos!"
+        echo "💡 Execute: composer run test:type-coverage"
+        exit 1
+    fi
+fi
+echo "✅ Cobertura de tipos OK"
+
+# 5. Testes unitários
+echo "🧪 5/6 Executando testes unitários (Pest)..."
+if ! composer run test:unit; then
+    if try_auto_fix "Testes unitários" "composer run test:unit" "Testes unitários falharam"; then
+        echo "✅ Testes unitários corrigidos automaticamente"
+    else
+        echo "❌ Erro nos testes unitários!"
+        echo "💡 Execute: composer run test:unit"
+        exit 1
+    fi
+fi
+echo "✅ Testes unitários OK"
+
+# 6. Verificação de refatoração
+echo "🔄 6/6 Verificando refatoração (Rector)..."
+if ! composer run test:refactor; then
+    if try_auto_fix "Refatoração" "composer run refactor" "Verificação de refatoração falhou"; then
+        echo "✅ Refatoração corrigida automaticamente"
+    else
+        echo "❌ Erro na verificação de refatoração!"
+        echo "💡 Execute: composer run refactor"
+        exit 1
+    fi
+fi
+echo "✅ Refatoração OK"
+
+echo "================================================"
+echo "🎉 TODAS as verificações passaram! Commit permitido."
+echo "✨ Seu código está com qualidade máxima!"
