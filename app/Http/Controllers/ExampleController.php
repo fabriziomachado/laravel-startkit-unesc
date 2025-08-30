@@ -1,6 +1,6 @@
 <?php
 class TestClass{
-    public function stestMethod(){
+    public function testMethod(){
         $var="test";
         return $var;
     }
