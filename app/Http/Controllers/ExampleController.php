@@ -1,8 +1,13 @@
-// teste
 <?php
-class TestClass{
-    public function testMethod(){
-        $var="test";
+
+declare(strict_types=1);
+
+class TestClass
+{
+    public function testMethod(): string
+    {
+        $var = "test";
+
         return $var;
     }
 }
