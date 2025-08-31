@@ -9,11 +9,10 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, macos-latest]
-        php: ['8.2', '8.3', '8.4']
-        symfony: ['^6.4', '^7.2']
+        php: ['8.4']
         dependency-version: [prefer-lowest, prefer-stable]
 
-    name: Tests P${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-version }} (Symfony ${{ matrix.symfony }})
+    name: Tests P${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-version }}
 
     steps:
 
@@ -45,16 +44,12 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: dependencies-php-${{ matrix.php }}-os-${{ matrix.os }}-${{ matrix.dependency-version }}-symfony-${{ matrix.symfony }}-composer-${{ hashFiles('composer.json') }}
-        restore-keys: dependencies-php-${{ matrix.php }}-os-${{ matrix.os }}-${{ matrix.dependency-version }}-symfony-${{ matrix.symfony }}-composer-
+        key: dependencies-php-${{ matrix.php }}-os-${{ matrix.os }}-${{ matrix.dependency-version }}-composer-${{ hashFiles('composer.json') }}
+        restore-keys: dependencies-php-${{ matrix.php }}-os-${{ matrix.os }}-${{ matrix.dependency-version }}-composer-
 
     - name: Install Composer dependencies
       run: |
-        composer update --${{ matrix.dependency-version }} --no-interaction --prefer-dist && \
-        composer update --no-interaction --prefer-dist --with symfony/console:${{ matrix.symfony }} && \
-        composer update --no-interaction --prefer-dist --with \
-          symfony/console:${{ matrix.symfony }} \
-          symfony/finder:${{ matrix.symfony }}
+        composer update --${{ matrix.dependency-version }} --no-interaction --prefer-dist
 
     - name: Integration Tests
       run: composer test:unit
