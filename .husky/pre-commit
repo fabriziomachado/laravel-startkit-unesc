@@ -35,7 +35,8 @@ if ! composer run test:typos; then
     fi
 fi
 echo "✅ Ortografia OK"
-
+echo ""
+echo ""
 # 2. Verificação de tipos
 echo "🔍 2/6 Verificando tipos (Larastan)..."
 if ! composer run test:types; then
@@ -48,7 +49,8 @@ if ! composer run test:types; then
     fi
 fi
 echo "✅ Tipos OK"
-
+echo ""
+echo ""
 # 3. Verificação de formatação
 echo "🎨 3/6 Verificando formatação (Pint + Prettier)..."
 if ! composer run test:lint; then
@@ -61,7 +63,8 @@ if ! composer run test:lint; then
     fi
 fi
 echo "✅ Formatação OK"
-
+echo ""
+echo ""
 # 4. Verificação de cobertura de tipos
 echo "📊 4/6 Verificando cobertura de tipos..."
 if ! composer run test:type-coverage; then
@@ -74,6 +77,8 @@ if ! composer run test:type-coverage; then
     fi
 fi
 echo "✅ Cobertura de tipos OK"
+echo ""
+echo ""
 
 # 5. Testes unitários
 echo "🧪 5/6 Executando testes unitários (Pest)..."
@@ -87,6 +92,8 @@ if ! composer run test:unit; then
     fi
 fi
 echo "✅ Testes unitários OK"
+echo ""
+echo ""
 
 # 6. Verificação de refatoração
 echo "🔄 6/6 Verificando refatoração (Rector)..."
@@ -100,7 +107,12 @@ if ! composer run test:refactor; then
     fi
 fi
 echo "✅ Refatoração OK"
+echo ""
+echo ""
 
 echo "================================================"
 echo "🎉 TODAS as verificações passaram! Commit permitido."
 echo "✨ Seu código está com qualidade máxima!"
+echo ""
+echo ""
+echo ""

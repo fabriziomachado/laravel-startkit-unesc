@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\ExampleController;
 
 describe('ExampleController', function () {
+
     beforeEach(function () {
         $this->controller = new ExampleController();
     });

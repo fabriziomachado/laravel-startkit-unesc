@@ -25,6 +25,7 @@
         "pestphp/pest": "^4.0",
         "pestphp/pest-plugin-laravel": "^4.0",
         "pestphp/pest-plugin-type-coverage": "^4.0.0",
+        "phpstan/phpstan-phpunit": "^2.0",
         "ramsey/conventional-commits": "^1.6",
         "rector/rector": "^2.0.18"
     },
@@ -41,18 +42,6 @@
         }
     },
     "scripts": {
-        "dev": [
-            "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
-          ],
-          "setup": [
-            "@php artisan key:generate",
-            "touch database/database.sqlite",
-            "php artisan migrate:fresh --seed --force --ansi",
-            "npm install",
-            "npm run build",
-            "@php artisan scribe:generate"
-          ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -68,13 +57,30 @@
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+        ],
+        "dev:ssr": [
+            "npm run build:ssr",
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"php artisan inertia:start-ssr\" --names=server,queue,logs,ssr"
+        ],
+        "setup": [
+            "@php artisan key:generate",
+            "touch database/database.sqlite",
+            "php artisan migrate:fresh --seed --force --ansi",
+            "npm install",
+            "npm run build",
+            "@php artisan scribe:generate"
+          ],
         "lint": [
             "pint",
             "npm run lint"
         ],
         "refactor": "rector",
         "test:type-coverage": "pest --type-coverage --min=100",
-        "test:typos": "peck",
+        "test:typos": "peck --",
         "test:lint": [
             "pint --test",
             "npm run test:lint"

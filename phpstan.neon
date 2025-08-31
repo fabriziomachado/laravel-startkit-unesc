@@ -2,9 +2,21 @@ includes:
     - vendor/larastan/larastan/extension.neon
     - vendor/nesbot/carbon/extension.neon
 
+    # Pest v4
+    - vendor/pestphp/pest/extension.neon   # <- importante para o "expect", "each", etc.
+
+    # PHPUnit
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+
+
 parameters:
 
     paths:
         - app/
+        #- tests/
 
     level: max
+    tmpDir: storage/phpstan
+    # ajustes comuns em Laravel se precisar:
+    # checkGenericClassInNonGenericObjectType: false
